@@ -1,0 +1,97 @@
+package cassandra.masteringCassandra2;
+
+import java.io.Closeable;
+import java.io.FileInputStream;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.mapping.Mapper;
+import com.datastax.driver.mapping.MappingManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class CassandraConnection {
+	private static final Logger log = LoggerFactory.getLogger(CassandraConnection.class);
+	private static Cluster cluster = getCluster();
+	
+	public static final Session getSession(){
+		if ( cluster == null ){
+			cluster = getCluster();
+		}
+		
+		return cluster.connect();
+	}
+	
+	private static Cluster getCluster(){
+		Cluster clust = Cluster
+						.builder()
+						.addContactPoint(Constants.HOST)
+						.build();
+
+//		clust.getConfiguration().getCodecRegistry().register(new DateTimeCodec());
+
+		return clust;
+	}
+	
+	public static final void closeClusterConnection(){
+		if ( cluster != null && !cluster.isClosed()){
+			try{
+				cluster.close();
+			}catch(Exception e){
+				/*ignore*/
+				log.warn("Error closing cluster connection", e);
+			}
+		}
+	}
+	
+	/**
+	 * This is just an utility class to make sure that I do not create
+	 * Mapper again and again (which recreates same PreparedStatement)
+	 * causing the driver library to throw ugly warning about inefficiency
+	 * in recreating statement.
+	 * 
+	 * This class makes sure for a given session and class, you create mappers
+	 * just once.
+	 * @author naishe
+	 *
+	 */
+	public static class SessionWrapper implements Closeable{
+		private Session session;
+		private Map<Class<?>, Mapper<? extends AbstractVO<?>>> mapperMap = new ConcurrentHashMap<>();
+		private AllQueries allQueries;
+		
+		public SessionWrapper(){
+			this.session = CassandraConnection.getSession();
+		}
+		
+		@SuppressWarnings("unchecked")
+		public <T extends AbstractVO<T>> Mapper<T> getMapper(Class<T> klass){
+			if( !mapperMap.containsKey(klass) ){
+				mapperMap.put(klass, new MappingManager(session).mapper(klass));
+			}
+			return (Mapper<T>) mapperMap.get(klass);
+		}
+		
+		public boolean isClosed(){
+			return session.isClosed();
+		}
+		
+		@Override
+		public void close() {
+			session.close();
+		}
+		
+		public Session getSession(){
+			return this.session;
+		}
+
+		public AllQueries getAllQueries() {
+			if(allQueries == null){
+				allQueries = new MappingManager(getSession()).createAccessor(AllQueries.class);
+			}
+			return allQueries;
+		}
+	}
+}
