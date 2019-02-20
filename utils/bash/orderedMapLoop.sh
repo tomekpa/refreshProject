@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#curl --request --data '{"req_prop":"req_prop_val"}' POST https://tomekpa.free.beeceptor.com/hello
+
 echo "======================================="
 
 #array
@@ -12,32 +14,41 @@ declare -a endpointsOrder=(
 
 for i in "${!endpointsOrder[@]}"
     do
+        echo -n "*"
 #       echo ${endpointsOrder[$i]}
-        printf "%3s key" $i
-        printf "%10s value\n" ${endpointsOrder[$i]}
+#        printf "%3s key" $i
+#        printf "%10s value\n" ${endpointsOrder[$i]}
 done
 
+echo
 echo "======================================="
 
 #associative array
 declare -A endpointsQueryMap
-endpointsQueryMap[patient1]="curl_1"
-endpointsQueryMap[bar2]="curl_4"
-endpointsQueryMap[patient2]="curl_2"
-endpointsQueryMap[bar1]="curl_3"
+endpointsQueryMap[patient1]="curl https://tomekpa.free.beeceptor.com/hello"
+endpointsQueryMap[bar2]="curl --request POST --data '{\"req_prop1\":\"req_prop_val1\"}' https://tomekpa.free.beeceptor.com/hello"
+endpointsQueryMap[patient2]="curl --request POST --data '{\"req_prop2\":\"req_prop_val2\"}' https://tomekpa.free.beeceptor.com/hello"
+endpointsQueryMap[bar1]="curl --request GET https://tomekpa.free.beeceptor.com/hello"
 
 for i in "${!endpointsQueryMap[@]}"
     do
-        printf "%8s key" $i
-        printf "%8s value\n" ${endpointsQueryMap[$i]}
+         echo -n "*"
+#        printf "%8s key" $i
+#        printf "%8s value\n" ${endpointsQueryMap[$i]}
 done
 
+echo
 echo "======================================="
 
 for i in "${!endpointsOrder[@]}"
     do
-        command=${endpointsOrder[$i]}
-        echo ${endpointsQueryMap[$command]}
+        commandName=${endpointsOrder[$i]}
+#        echo ${endpointsOrder[$i]}
+        echo ${endpointsQueryMap[$commandName]}
+        commandValue=${endpointsQueryMap[$commandName]}
+        eval $commandValue
+        echo
 done
 
+echo
 echo "======================================="
