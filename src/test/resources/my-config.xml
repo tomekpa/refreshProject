@@ -20,10 +20,18 @@
     </bean>
 
     <bean id="classWithResources"
-          class="spring.test.resourceLoading.ClassWithResources">
+          class="spring.test.resourceLoading.MyClassWithResourceList">
         <property name="templateFiles">
             <util:list>
-                <value>META-INF/myFile.txt</value>
+                <!--<value>META-INF/*.txt</value>-->
+                <!--<value>classpath:/META-INF/myFile1.txt</value>-->
+                <!--<value>classpath:/META-INF/myFile2.txt</value>-->
+                <!--<value>classpath:/META-INF/myFile3.txt</value>-->
+
+                <value>classpath*:**/META-INF/myFile*.txt</value>
+                <value>classpath*:**/myFile4.txt</value>
+                <!--<value>classpath*:**/myFile2.txt</value>-->
+                <!--<value>classpath*:**/myFile3.txt</value>-->
             </util:list>
         </property>
     </bean>
