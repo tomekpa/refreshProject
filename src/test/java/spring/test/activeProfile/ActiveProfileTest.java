@@ -50,7 +50,7 @@ public class ActiveProfileTest {
     //THIS ONE IS IGNORED
     @TestPropertySource("classpath:activeProfile/application-context-test.properties")
     static class TestContext {
-
+        //ADD TO VM OPTION -Dspring.profiles.active=localPdfTestGeneration
         @Primary
         @Bean(value = "localPdfTestGenerationIndicator")
         Boolean isLocalDevelopement(Environment springEnvironment) {

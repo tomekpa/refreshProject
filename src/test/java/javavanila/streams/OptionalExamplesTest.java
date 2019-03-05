@@ -10,7 +10,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,7 +28,38 @@ public class OptionalExamplesTest {
     static Integer helpCounter = 0;
 
     @Test
-    public void shoulMapOptional() {
+    public void shouldMapOptionalBoolToString() {
+        assertThat(mapOptionalBoolToStringA(true), is("AAA"));
+        assertThat(mapOptionalBoolToStringA(false), is("BBB"));
+        assertThat(mapOptionalBoolToStringA(null), is("CCC"));
+        assertThat(mapOptionalBoolToStringB(true), is("AAA"));
+        assertThat(mapOptionalBoolToStringB(false), is("BBB"));
+        assertThat(mapOptionalBoolToStringB(null), is("CCC"));
+    }
+
+    private String mapOptionalBoolToStringA(Boolean aBoolean) {
+        return Optional.ofNullable(aBoolean)
+                .map(bool -> {
+                    if (bool) {
+                        return "AAA";
+                    } else {
+                        return "BBB";
+                    }
+                })
+                .orElse("CCC");
+    }
+
+    private String mapOptionalBoolToStringB(Boolean aBoolean) {
+        if (aBoolean == null) return "CCC";
+        if (aBoolean) {
+            return "AAA";
+        } else {
+            return "BBB";
+        }
+    }
+
+    @Test
+    public void shouldMapOptionalToString() {
         Optional<TestCar> opt = Optional.ofNullable(new TestCar());
         String name = opt.map(TestCar::getName).get();
         assertThat(name, is("CarName"));
@@ -253,7 +286,7 @@ public class OptionalExamplesTest {
         ImmutableList<Integer> inputList = ImmutableList.of(0, 1, 2, 3, 4, 5, 6);
 
         List<String> collection = inputList.stream() //Optional does not have flatMap(Stream)
-                .flatMap(elem -> Stream.of(elem, elem ))
+                .flatMap(elem -> Stream.of(elem, elem))
                 .map(elem -> "This is: " + elem)
                 .collect(Collectors.toList());
 
