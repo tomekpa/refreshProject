@@ -6,6 +6,7 @@ import javavanila.streams.OptionalExamples.Company;
 import javavanila.streams.OptionalExamples.Owner;
 import lombok.Getter;
 import lombok.Setter;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -26,6 +27,7 @@ import static org.hamcrest.core.IsNull.nullValue;
 public class OptionalExamplesTest {
 
     static Integer helpCounter = 0;
+
 
     @Test
     public void shouldMapOptionalBoolToString() {
