@@ -51,6 +51,19 @@ public class OptionalExamplesTest {
                 .orElse("CCC");
     }
 
+//        return Optional.ofNullable(aBoolean) {
+//            .map(  this::getSlogan  )
+//            .orElse("CCC");
+//    }
+
+    private String getSlogan(Boolean aBoolean) {
+        if (aBoolean) {
+            return "AAA";
+        } else {
+            return "BBB";
+        }
+    }
+
     private String mapOptionalBoolToStringB(Boolean aBoolean) {
         if (aBoolean == null) return "CCC";
         if (aBoolean) {
