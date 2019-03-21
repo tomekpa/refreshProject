@@ -3,12 +3,15 @@ package javavanila.times;
 import org.hamcrest.core.StringContains;
 import org.junit.Test;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class DatesAndTimesGuideTest {
     @Test
@@ -62,9 +65,14 @@ public class DatesAndTimesGuideTest {
 
     @Test
     public void shouldPrintSomeTimeZones() {
+        System.out.println("==============================================");
         System.out.println("Default TimeZone:" + TimeZone.getDefault().getDisplayName());
         System.out.println("Default TimeZone:" + TimeZone.getDefault().getID());
         System.out.println("Default TimeZone:" + TimeZone.getDefault().getRawOffset()/1000/60/60);
+        System.out.println("==============================================");
+        System.out.println("Default TimeZone:" + TimeZone.getTimeZone("Africa/Luanda").getDisplayName());
+        System.out.println("Default TimeZone:" + TimeZone.getTimeZone("Africa/Luanda").getID());
+        System.out.println("Default TimeZone:" + TimeZone.getTimeZone("Africa/Luanda").getRawOffset()/1000/60/60);
         System.out.println("==============================================");
         System.out.println("Default TimeZone:" + TimeZone.getTimeZone("GMT").getDisplayName());
         System.out.println("Default TimeZone:" + TimeZone.getTimeZone("GMT").getID());
@@ -82,26 +90,92 @@ public class DatesAndTimesGuideTest {
 
     @Test
     public void shouldCheckIfDateIsInGMT() throws ParseException {
-
+        System.out.println("==============================================");
         String someInput = "2019-03-19 11:51";
         SimpleDateFormat currentLocaleDateFormat = new SimpleDateFormat("YYYY-MM-dd hh:mm");
         Date currentDate = currentLocaleDateFormat.parse(someInput);
-        System.out.print("parsed: ");
-        System.out.println(currentDate.getTime());
+        System.out.println("OPERATION: Parse using default locale");
+        System.out.println("INPUT:" + someInput);
+        System.out.println("OUTPUT:" + currentDate.getTime());
+        System.out.println("==============================================");
 
         SimpleDateFormat gmtLocaleDateFormat = new SimpleDateFormat("YYYY-MM-dd hh:mm");
         gmtLocaleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date gmtDate = gmtLocaleDateFormat.parse(someInput);
-        System.out.print("gmtLocaleDateFormat: ");
-        System.out.println(gmtDate.getTime());
+        System.out.println("OPERATION: Parse using GMT locale");
+        System.out.println("INPUT:" + someInput);
+        System.out.println("OUTPUT:" + gmtDate.getTime());
+        System.out.println("==============================================");
 
         SimpleDateFormat printFormatLocal = new SimpleDateFormat("YYYY-MM-dd hh:mm z");
-        System.out.println(printFormatLocal.format(currentDate));
-        System.out.println(printFormatLocal.format(gmtDate));
-
         SimpleDateFormat printFormatGmt = new SimpleDateFormat("YYYY-MM-dd hh:mm z");
         printFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-        System.out.println(printFormatGmt.format(currentDate));
-        System.out.println(printFormatGmt.format(gmtDate));
+
+        System.out.println("OPERATION: currentDate formatted as default locale");
+        System.out.println("INPUT:" + printFormatLocal.format(currentDate));
+        System.out.println("==============================================");
+        System.out.println("OPERATION: currentDate formatted as GMT locale");
+        System.out.println("INPUT:" + printFormatGmt.format(currentDate));
+        System.out.println("==============================================");
+        System.out.println("OPERATION: gmtDate formatted as default locale");
+        System.out.println("INPUT:" + printFormatLocal.format(gmtDate));
+        System.out.println("==============================================");
+        System.out.println("OPERATION: gmtDate formatted as GMT locale");
+        System.out.println("INPUT:" + printFormatGmt.format(gmtDate));
+        System.out.println("==============================================");
+    }
+
+
+    /*
+     * INFO:
+     * date with +1h is parsed as +1 locale and this generate timestamp ONE
+     * date with +0h is parsed as +0 locale and this generate timestamp ZERO
+     * Timestamps==long of ONE and ZERO are equal because timestamp is
+     * Timezone neutral
+     * CONCLUSION: parse date gives different result in different timezone
+     */
+    @Test
+    public void shouldParseAsSameMills() throws ParseException {
+        String willBeParsedAsPlusOne = "2019-03-19 11:51";
+        String willBeParsedAsPlusZero = "2019-03-19 10:51";
+
+        SimpleDateFormat formatInPlusOneLocale = new SimpleDateFormat("YYYY-MM-dd hh:mm");
+        formatInPlusOneLocale.setTimeZone(TimeZone.getTimeZone("Africa/Luanda"));
+
+        SimpleDateFormat formatInPlusZeroLocale = new SimpleDateFormat("YYYY-MM-dd hh:mm");
+        formatInPlusZeroLocale.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        long plusOneMills = formatInPlusOneLocale.parse(willBeParsedAsPlusOne).getTime();
+        long plusZeroMills = formatInPlusZeroLocale.parse(willBeParsedAsPlusZero).getTime();
+
+        assertEquals(plusOneMills, plusZeroMills);
+    }
+
+    @Test
+    public void shouldSuccesfullyParseAndCompareInSameZone() throws ParseException {
+
+        String parseableToDate = "2019-03-19 11:51";
+
+        SimpleDateFormat formatInPlusOneLocale = new SimpleDateFormat("YYYY-MM-dd hh:mm");
+        formatInPlusOneLocale.setTimeZone(TimeZone.getTimeZone("Africa/Luanda"));
+
+        SimpleDateFormat formatInPlusZeroLocale = new SimpleDateFormat("YYYY-MM-dd hh:mm");
+        formatInPlusZeroLocale.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        long plusOneMills = formatInPlusOneLocale.parse(parseableToDate).getTime();
+        long plusZeroMills = formatInPlusZeroLocale.parse(parseableToDate).getTime();
+
+        System.out.println(plusOneMills);
+        System.out.println(plusZeroMills);
+        System.out.println(new Date(plusOneMills)); //To String in default locae = +1
+
+        String plusOneAsDateString = formatInPlusOneLocale.format(plusOneMills); //new Date(plusOneMills) give same result
+        String plusZeroAsDateString = formatInPlusZeroLocale.format(plusZeroMills);
+
+        assertEquals(parseableToDate, plusOneAsDateString);
+        assertEquals(parseableToDate, plusZeroAsDateString);
+//TODO: WTF ?
+//        Expected :2019-03-19 11:51
+//        Actual   :2019-12-31 11:51
     }
 }
