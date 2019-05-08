@@ -8,6 +8,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -34,11 +35,20 @@ public class ArraysExamplesTest {
     public void name() throws Exception {
 
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        for (int i=0;i<10;i++) {
+        for (int i = 0; i < 10; i++) {
             bout.write((byte) (Math.random() * 128));
         }
         byte[] byteArray = bout.toByteArray();
         for (byte b : byteArray)
-        System.out.print(b+" ");
+            System.out.print(b + " ");
     }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void shouldThrowExceptionWhenUnmodifiable() throws Exception {
+        List<String> list = new ArrayList<>();
+        list.add("first");
+        List<String> uList = Collections.unmodifiableList(list);
+        uList.add("second");
+    }
+
 }

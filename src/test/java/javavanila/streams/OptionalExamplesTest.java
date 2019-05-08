@@ -102,11 +102,19 @@ public class OptionalExamplesTest {
         );
     }
 
-
     @Test
     public void optionalFilter() {
         Optional<String> opt = Optional.ofNullable("carName");
 //        Optional<String> name = opt.filter(c -> c.contains("Name")).orElse("Dupa");
+    }
+
+    @Test
+    public void shouldReturnOrElse() {
+        Optional<Integer> opt = Optional.ofNullable(null);
+        opt.ifPresent(System.out::println);
+
+        Integer integer = opt.orElse(0);
+        System.out.println(integer);
     }
 
     /**

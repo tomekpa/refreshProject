@@ -1,8 +1,8 @@
-------------------------------------------------------------------------------------
--- Ultimate 2016.3 no templates fix
-------------------------------------------------------------------------------------
+## This is only learning repository
 
-Solved by using 32 bit launcher instead of 64 bit !
-OR
-Add -Djdk.util.zip.ensureTrailingSlash=false in Help | Edit Custom VM Options.
-There was incompatible change in the recent Java update which breaks some features in the old IntelliJ IDEA versions.
+It contains a lot of console logs to help imagine data structures etc.
+
+If You look for patters:
+"This is not repository You are looking for..." 
+
+
