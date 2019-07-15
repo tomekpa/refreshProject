@@ -7,16 +7,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ProxyFunTest {
 
-  @Test
-  public void shouldTestSomething() {
-
-    ProxiedObjectInterface proxiedObjectInterface = new ProxiedObject();
-    ProxiedObjectInterface proxied = ProxiedObjectFactory.get(proxiedObjectInterface);
-
-    String s1 = proxied.iWasProxied();
-    String s2 = proxied.iWasProxiedAgain();
-
-    assertThat(s1, Matchers.is("iWasProxied"));
-    assertThat(s2, Matchers.is("iWasProxiedAgain"));
-  }
+    @Test
+    public void shouldTestSomething() {
+        //given
+        ProxiedObjectInterface proxiedObjectInterface = new ProxiedObject();
+        ProxiedObjectInterface proxied = ProxiedObjectFactory.get(proxiedObjectInterface);
+        //when
+        String s1 = proxied.iWasProxied();
+        String s2 = proxied.iWasProxiedAgain();
+        //then
+        assertThat(s1, Matchers.is("iWasProxied"));
+        assertThat(s2, Matchers.is("iWasProxiedAgain"));
+    }
 }
