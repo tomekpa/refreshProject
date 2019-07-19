@@ -86,6 +86,27 @@ public class ParallelExamplesTest {
     }
 
     @Test
+    public void improvedCollectionCreation() throws Exception {
+        //given
+        IntStream stream1 = IntStream.rangeClosed(1, 10);
+        IntStream stream2 = IntStream.rangeClosed(5, 15);
+        IntStream inputStream = IntStream.concat(stream1, stream2);
+
+        List<Integer> collect = inputStream
+                .parallel()
+                .boxed()
+                .map(this::noMappWithPrint1)
+                .map(this::noMappWithPrint2)
+                .distinct()
+                .map(this::noMappWithPrint3)
+                .sorted()
+                .map(this::noMappWithPrint4)
+                .collect(Collectors.toList());
+        //then
+        assertTrue(collect.size() == 15);
+    }
+
+    @Test
     public void parallelStreamWithStatefulIntermidieteOperation() throws Exception {
         //given
 
