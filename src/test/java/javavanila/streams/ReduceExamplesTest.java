@@ -5,8 +5,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.List;
 import java.util.OptionalInt;
 import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -71,5 +73,35 @@ public class ReduceExamplesTest {
         IntStream is;
 
         max.ifPresent(Integer::toString);
+    }
+
+    @Test
+    public void whatIsIdentity() throws Exception {
+
+        MyIdentity identity = new MyIdentity(0);
+
+        List<MyIdentity> list = ImmutableList.of(1, 2, 3, 4, 5).stream()
+                .map(MyIdentity::new)
+                .collect(Collectors.toList());
+
+        MyIdentity reduce = list.stream()
+                .reduce(identity, (identityElement, i) -> {
+                    identityElement.a = identityElement.a + i.a;
+                    identityElement.as = identityElement.as + "-" + i.as;
+                    return identityElement;
+                });
+
+        System.out.println(reduce.a);
+        System.out.println(reduce.as);
+    }
+
+    private static class MyIdentity {
+        public int a;
+        public String as;
+
+        public MyIdentity(int a) {
+            this.a = a;
+            this.as = Integer.valueOf(a).toString() + "*";
+        }
     }
 }
