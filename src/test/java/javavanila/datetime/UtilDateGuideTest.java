@@ -1,10 +1,8 @@
-package javavanila.times;
+package javavanila.datetime;
 
 import org.hamcrest.core.StringContains;
 import org.junit.Test;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,7 +11,10 @@ import java.util.TimeZone;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
-public class DatesAndTimesGuideTest {
+//Java 8 introduced new APIs for Date and Time to address the shortcomings of the older java.util.Date and java.util.Calendar.
+//TODO: java.util.Calendar
+
+public class UtilDateGuideTest {
     @Test
     public void shoudldPrintSystemMills() {
         long timestamp = System.currentTimeMillis();
