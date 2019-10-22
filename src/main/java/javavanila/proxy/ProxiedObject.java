@@ -3,7 +3,7 @@ package javavanila.proxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ProxiedObject implements ProxiedObjectInterface {
+public class ProxiedObject implements ProxiedObjectInterfaceOne {
 
   private static Logger log = LoggerFactory.getLogger(ProxiedObject.class);
 

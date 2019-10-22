@@ -1,6 +1,6 @@
 package javavanila.proxy;
 
-public interface ProxiedObjectInterface {
+public interface ProxiedObjectInterfaceTwo {
   String iWasProxied();
   String iWasProxiedAgain();
 }

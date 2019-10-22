@@ -10,8 +10,8 @@ public class ProxyFunTest {
     @Test
     public void shouldTestSomething() {
         //given
-        ProxiedObjectInterface proxiedObjectInterface = new ProxiedObject();
-        ProxiedObjectInterface proxied = ProxiedObjectFactory.get(proxiedObjectInterface);
+        ProxiedObjectInterfaceOne proxiedObjectInterface = new ProxiedObject();
+        ProxiedObjectInterfaceOne proxied = ProxiedObjectFactory.get(proxiedObjectInterface);
         //when
         String s1 = proxied.iWasProxied();
         String s2 = proxied.iWasProxiedAgain();
